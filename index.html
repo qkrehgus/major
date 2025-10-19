@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>영화싹모아</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">영화싹모아</div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="영화를 검색하세요...">
+            <button id="searchBtn">🔍</button>
+        </div>
+        <div class="auth-buttons">
+            <button id="loginBtn">로그인</button>
+            <button id="signupBtn">회원가입</button>
+            <div class="user-info" id="userInfo"></div>
+        </div>
+    </header>
+
+    <!-- Login Alert (로그인 전) -->
+    <div id="loginAlert" class="login-alert-container">
+        <div class="login-alert">
+            <h2>영화싹모아</h2>
+            <p>최신 영화를 추천받고 평가해보세요</p>
+            <div class="login-alert-buttons">
+                <button onclick="openModal('loginModal')" class="btn-login-alert">로그인</button>
+                <button onclick="openModal('signupModal')" class="btn-signup-alert">회원가입</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="content-hidden">
+        <!-- Trailer Section -->
+        <section class="trailer-section">
+            <h2 style="color: #dc143c; margin-bottom: 20px; font-size: 26px;">💖 추천</h2>
+            <div class="trailer-featured" id="trailerFeatured">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/CZHt-8brcuE?si=8bdeSJrOriPjnee-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width: 100%; height: 100%;"></iframe>
+            </div>
+        </section>
+
+        <!-- HOT 영화 섹션 -->
+        <section class="section">
+            <div class="section-header">
+                <h2>🔥 HOT 한 영화</h2>
+                <div class="section-controls">
+                    <button class="add-btn" onclick="openModal('addMovieModal')">+ 영화 추가</button>
+                    <button class="more-btn" onclick="openMorePage('hot')">더보기</button>
+                </div>
+            </div>
+            <div class="movie-grid" id="hotMovies">
+                <!-- 동적으로 생성됨 -->
+            </div>
+        </section>
+
+        <!-- TOP 영화 섹션 (평점 순) -->
+        <section class="section">
+            <div class="section-header">
+                <h2>⭐ TOP 영화</h2>
+                <div class="section-controls">
+                    <button class="add-btn" onclick="openModal('addMovieModal')">+ 영화 추가</button>
+                    <button class="more-btn" onclick="openMorePage('top')">더보기</button>
+                </div>
+            </div>
+            <div class="movie-grid" id="topMovies">
+                <!-- 동적으로 생성됨 -->
+            </div>
+        </section>
+
+        <!-- 공개 예정작 섹션 -->
+        <section class="section">
+            <div class="section-header">
+                <h2>🎬 공개 예정작</h2>
+                <div class="section-controls">
+                    <button class="add-btn" onclick="openModal('addMovieModal')">+ 영화 추가</button>
+                    <button class="more-btn" onclick="openMorePage('coming')">더보기</button>
+                </div>
+            </div>
+            <div class="movie-grid" id="comingMovies">
+                <!-- 동적으로 생성됨 -->
+            </div>
+        </section>
+    </main>
+
+    <!-- More Page (더보기) -->
+    <div id="morePage" class="more-page content-hidden">
+        <div class="more-page-header">
+            <button onclick="closeMorePage()" class="back-btn">← 돌아가기</button>
+            <h2 id="morePageTitle"></h2>
+        </div>
+        <div class="movie-grid" id="morePageGrid">
+            <!-- 동적으로 생성됨 -->
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+            <h2>로그인</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>이메일</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>비밀번호</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeModal('loginModal')">취소</button>
+                    <button type="submit" class="btn-submit">로그인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('signupModal')">&times;</button>
+            <h2>회원가입</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>이름</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label>학번</label>
+                    <input type="text" id="signupStudentId" required>
+                </div>
+                <div class="form-group">
+                    <label>이메일</label>
+                    <input type="email" id="signupEmail" placeholder="example@gmail.com" required>
+                    <small style="color: #dc143c;">@와 gmail.com 포함 필수</small>
+                </div>
+                <div class="form-group">
+                    <label>전화번호</label>
+                    <input type="tel" id="signupPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>비밀번호</label>
+                    <input type="password" id="signupPassword" required>
+                    <small style="color: #dc143c;">숫자, 대문자 1개 이상, 특수기호 1개 필수</small>
+                </div>
+                <div class="form-group">
+                    <label>비밀번호 확인</label>
+                    <input type="password" id="signupPasswordConfirm" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeModal('signupModal')">취소</button>
+                    <button type="submit" class="btn-submit">회원가입</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Movie Modal -->
+    <div class="modal" id="addMovieModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('addMovieModal')">&times;</button>
+            <h2>영화 추가</h2>
+            <form id="addMovieForm">
+                <div class="form-group">
+                    <label>영화 이름</label>
+                    <input type="text" id="movieName" required>
+                </div>
+                <div class="form-group">
+                    <label>개봉년도</label>
+                    <input type="number" id="movieYear" required>
+                </div>
+                <div class="form-group">
+                    <label>카테고리</label>
+                    <select id="movieCategory" required>
+                        <option value="">선택하세요</option>
+                        <option value="hot">HOT 영화</option>
+                        <option value="top">TOP 영화</option>
+                        <option value="coming">공개 예정작</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>장르 (중복 선택 가능)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="genre" value="액션"> 액션</label>
+                        <label><input type="checkbox" name="genre" value="범죄"> 범죄</label>
+                        <label><input type="checkbox" name="genre" value="SF"> SF</label>
+                        <label><input type="checkbox" name="genre" value="코미디"> 코미디</label>
+                        <label><input type="checkbox" name="genre" value="사극"> 사극</label>
+                        <label><input type="checkbox" name="genre" value="로맨스"> 로맨스</label>
+                        <label><input type="checkbox" name="genre" value="스릴러"> 스릴러</label>
+                        <label><input type="checkbox" name="genre" value="공포"> 공포</label>
+                        <label><input type="checkbox" name="genre" value="전쟁"> 전쟁</label>
+                        <label><input type="checkbox" name="genre" value="스포츠"> 스포츠</label>
+                        <label><input type="checkbox" name="genre" value="판타지"> 판타지</label>
+                        <label><input type="checkbox" name="genre" value="뮤지컬"> 뮤지컬</label>
+                        <label><input type="checkbox" name="genre" value="멜로"> 멜로</label>
+                        <label><input type="checkbox" name="genre" value="단편"> 단편</label>
+                        <label><input type="checkbox" name="genre" value="장편"> 장편</label>
+                        <label><input type="checkbox" name="genre" value="애니메이션"> 애니메이션</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>감독</label>
+                    <input type="text" id="movieDirector" required>
+                </div>
+                <div class="form-group">
+                    <label>제작 국가</label>
+                    <input type="text" id="movieCountry" placeholder="예: 대한민국, 미국" required>
+                </div>
+                <div class="form-group">
+                    <label>러닝타임 (분)</label>
+                    <input type="number" id="movieRuntime" required>
+                </div>
+                <div class="form-group">
+                    <label>연령 등급</label>
+                    <select id="movieRating" required>
+                        <option value="">선택하세요</option>
+                        <option value="미정">미정</option>
+                        <option value="전체이용가">전체이용가</option>
+                        <option value="12세이상">12세이상</option>
+                        <option value="15세이상">15세이상</option>
+                        <option value="18세이상">18세이상</option>
+                    </select>
+                </div>
+                <div class="form-group" id="releaseDateGroup" style="display: none;">
+                    <label>개봉일 (공개 예정작)</label>
+                    <input type="date" id="movieReleaseDate">
+                </div>
+                <div class="form-group">
+                    <label>작품 설명</label>
+                    <textarea id="movieDescription" required style="min-height: 100px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>예고편 유튜브 링크</label>
+                    <input type="url" id="movieTrailer">
+                </div>
+                <div class="form-group">
+                    <label>포스터 이미지 URL</label>
+                    <input type="url" id="moviePoster">
+                </div>
+                <div class="form-group">
+                    <label>사진 URL (쉼표로 구분)</label>
+                    <input type="text" id="moviePhotos">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeModal('addMovieModal')">취소</button>
+                    <button type="submit" class="btn-submit">추가</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Edit Movie Modal -->
+    <div class="modal" id="editMovieModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('editMovieModal')">&times;</button>
+            <h2>영화 수정</h2>
+            <form id="editMovieForm">
+                <input type="hidden" id="editMovieId">
+                <div class="form-group">
+                    <label>영화 이름</label>
+                    <input type="text" id="editMovieName" required>
+                </div>
+                <div class="form-group">
+                    <label>개봉년도</label>
+                    <input type="number" id="editMovieYear" required>
+                </div>
+                <div class="form-group">
+                    <label>카테고리</label>
+                    <select id="editMovieCategory" required>
+                        <option value="hot">HOT 영화</option>
+                        <option value="top">TOP 영화</option>
+                        <option value="coming">공개 예정작</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>장르</label>
+                    <div class="checkbox-group" id="editGenreGroup">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>감독</label>
+                    <input type="text" id="editMovieDirector" required>
+                </div>
+                <div class="form-group">
+                    <label>제작 국가</label>
+                    <input type="text" id="editMovieCountry" required>
+                </div>
+                <div class="form-group">
+                    <label>러닝타임 (분)</label>
+                    <input type="number" id="editMovieRuntime" required>
+                </div>
+                <div class="form-group">
+                    <label>연령 등급</label>
+                    <select id="editMovieRating" required>
+                        <option value="미정">미정</option>
+                        <option value="전체이용가">전체이용가</option>
+                        <option value="12세이상">12세이상</option>
+                        <option value="15세이상">15세이상</option>
+                        <option value="18세이상">18세이상</option>
+                    </select>
+                </div>
+                <div class="form-group" id="editReleaseDateGroup" style="display: none;">
+                    <label>개봉일</label>
+                    <input type="date" id="editMovieReleaseDate">
+                </div>
+                <div class="form-group">
+                    <label>작품 설명</label>
+                    <textarea id="editMovieDescription" required style="min-height: 100px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>예고편 유튜브 링크</label>
+                    <input type="url" id="editMovieTrailer">
+                </div>
+                <div class="form-group">
+                    <label>포스터 이미지 URL</label>
+                    <input type="url" id="editMoviePoster">
+                </div>
+                <div class="form-group">
+                    <label>사진 URL (쉼표로 구분)</label>
+                    <input type="text" id="editMoviePhotos">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeModal('editMovieModal')">취소</button>
+                    <button type="submit" class="btn-submit">수정</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Movie Detail Modal -->
+    <div class="modal" id="movieDetailModal">
+        <div class="modal-content" style="max-width: 900px; max-height: 90vh;">
+            <button class="close-modal" onclick="closeModal('movieDetailModal')">&times;</button>
+            <div id="movieDetail"></div>
+            <div id="movieReviews"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h3>제작자 정보</h3>
+                <p><strong>이름:</strong> 박도현</p>
+                <p><strong>학번:</strong> 10308</p>
+                <p><strong>전화번호:</strong> 010-5104-9732</p>
+                <p><strong>이메일:</strong> qkrehgusrnldyal@gmail.com</p>
+            </div>
+            <div class="footer-info">
+                <h3>사이트 정보</h3>
+                <p>영화싹모아는 최신 영화를 추천하고 평가하는 플랫폼입니다.</p>
+                <p>관리자 문의: qkrehgusrnldyal@gmail.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
